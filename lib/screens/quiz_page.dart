@@ -1,9 +1,13 @@
+import 'dart:math';
+import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quiz_application/constants/constants.dart';
 import 'package:flutter_quiz_application/screens/result_page.dart';
 
+// ignore: must_be_immutable
 class QuizPage extends StatefulWidget {
-  const QuizPage({super.key});
+  QuizPage({super.key, required this.correctAnswers});
+  int correctAnswers;
 
   @override
   State<QuizPage> createState() => _QuizPageState();
@@ -11,73 +15,91 @@ class QuizPage extends StatefulWidget {
 
 int shownindex = 0;
 int itemCounter = 0;
-int correctAnswers = 0;
 bool answerState = false;
+ConfettiController _confettiController = ConfettiController();
 
 class _QuizPageState extends State<QuizPage> {
   @override
   Widget build(BuildContext context) {
     String imageIndex = getQuestions()[shownindex].imageNumber!;
-
-    return Scaffold(
-      appBar: getappbar(),
-      body: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Image(
-              image: AssetImage("images/$imageIndex.png"),
-              height: 300,
-              width: 300,
-            ),
-            SizedBox(height: 15.0),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15),
-              child: SizedBox(
-                width: MediaQuery.of(context).size.width,
-                child: Text(
-                  getQuestions()[shownindex].title!,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18.0,
-                  ),
-                  textAlign: TextAlign.center,
+    return Stack(
+      alignment: AlignmentDirectional.topCenter,
+      children: [
+        Scaffold(
+          appBar: getappbar(),
+          body: SafeArea(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Image(
+                  image: AssetImage("images/$imageIndex.png"),
+                  height: 300,
+                  width: 300,
                 ),
-              ),
-            ),
-            SizedBox(height: 20.0),
-            ...List.generate(
-              4,
-              (index) => getlisttile(index),
-            ),
-            SizedBox(height: 10.0),
-            Visibility(
-              visible: answerState,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  minimumSize: Size(200.0, 45.0),
-                  backgroundColor: Colors.red[800],
-                ),
-                onPressed: () {
-                  Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          ResultPage(correctanswer: correctAnswers),
+                SizedBox(height: 15.0),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  child: SizedBox(
+                    width: MediaQuery.of(context).size.width,
+                    child: Text(
+                      getQuestions()[shownindex].title!,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18.0,
+                      ),
+                      textAlign: TextAlign.center,
                     ),
-                  );
-                },
-                child: Text(
-                  "مشاهده نتایج",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
                   ),
                 ),
-              ),
+                SizedBox(height: 20.0),
+                ...List.generate(
+                  4,
+                  (index) => answerSection(index),
+                ),
+                SizedBox(height: 10.0),
+                Visibility(
+                  visible: answerState,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      minimumSize: Size(200.0, 45.0),
+                      backgroundColor: Colors.red[800],
+                    ),
+                    onPressed: () {
+                      setState(
+                        () {
+                          shownindex = 0;
+                          itemCounter = 0;
+                          answerState = false;
+                        },
+                      );
+                      Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              ResultPage(correctanswer: widget.correctAnswers),
+                        ),
+                      );
+                    },
+                    child: Text(
+                      "مشاهده نتایج",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
-      ),
+        ConfettiWidget(
+          confettiController: _confettiController,
+          blastDirection: -pi / 2,
+          numberOfParticles: 15,
+          shouldLoop: true,
+          blastDirectionality: BlastDirectionality.explosive,
+        ),
+      ],
     );
   }
 
@@ -93,31 +115,31 @@ class _QuizPageState extends State<QuizPage> {
       centerTitle: true,
       elevation: 4,
       backgroundColor: Colors.indigo[800],
-      iconTheme: IconThemeData(
-        color: Colors.white,
-      ),
+      automaticallyImplyLeading: false,
     );
   }
 
-  Widget getlisttile(index) {
-    return GestureDetector(
-      onTap: () {
-        itemCounter++;
-        setState(() {
-          if (shownindex < getQuestions().length - 1) {
-            shownindex++;
+  Widget answerSection(index) {
+    return Padding(
+      padding: const EdgeInsets.only(right: 15, left: 15, bottom: 15),
+      child: InkWell(
+        onTap: () {
+          if (itemCounter < 9) {
+            itemCounter++;
           }
-
-          if (index == getQuestions()[shownindex].correctanswer) {
-            correctAnswers++;
-          }
-          if (itemCounter == 9) {
-            answerState = true;
-          }
-        });
-      },
-      child: Padding(
-        padding: const EdgeInsets.only(right: 15, left: 15, bottom: 15),
+          setState(() {
+            if (index == getQuestions()[shownindex].correctanswer) {
+              ++widget.correctAnswers;
+            }
+            if (shownindex < getQuestions().length - 1) {
+              shownindex++;
+            }
+            if (itemCounter == 9) {
+              answerState = true;
+              _confettiController.play();
+            }
+          });
+        },
         child: Container(
           height: 45,
           width: MediaQuery.of(context).size.width,

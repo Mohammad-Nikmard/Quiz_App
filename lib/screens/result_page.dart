@@ -1,14 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_quiz_application/screens/home_page.dart';
 
 // ignore: must_be_immutable
-class ResultPage extends StatelessWidget {
+class ResultPage extends StatefulWidget {
   ResultPage({super.key, required this.correctanswer});
   int? correctanswer;
 
   @override
+  State<ResultPage> createState() => _ResultPageState();
+}
+
+class _ResultPageState extends State<ResultPage> {
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: getappbar(),
+      appBar: getappbar(context),
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -25,7 +31,7 @@ class ResultPage extends StatelessWidget {
             SizedBox(height: 10.0),
             Center(
               child: Text(
-                "تعداد جواب درست شما",
+                "تعداد جواب درست شمااز 9 سوال",
                 style: TextStyle(
                   fontSize: 25,
                   fontWeight: FontWeight.bold,
@@ -35,7 +41,7 @@ class ResultPage extends StatelessWidget {
             ),
             SizedBox(height: 5.0),
             Center(
-              child: Text("$correctanswer",
+              child: Text("${widget.correctanswer}",
                   style: TextStyle(
                     fontSize: 100,
                     fontWeight: FontWeight.bold,
@@ -48,7 +54,7 @@ class ResultPage extends StatelessWidget {
     );
   }
 
-  PreferredSizeWidget getappbar() {
+  PreferredSizeWidget getappbar(BuildContext context) {
     return AppBar(
       title: Text(
         "نتیجه آزمون",
@@ -60,8 +66,23 @@ class ResultPage extends StatelessWidget {
       centerTitle: true,
       elevation: 4,
       backgroundColor: Colors.red[800],
-      iconTheme: IconThemeData(
-        color: Colors.white,
+      leading: GestureDetector(
+        onTap: () {
+          setState(() {
+            widget.correctanswer = 0;
+          });
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) =>
+                  HomeScreen(coreectAnswer: widget.correctanswer!),
+            ),
+          );
+        },
+        child: Icon(
+          Icons.arrow_back,
+          color: Colors.white,
+        ),
       ),
     );
   }

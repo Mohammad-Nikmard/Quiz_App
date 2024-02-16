@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       theme: ThemeData(fontFamily: "dana"),
       debugShowCheckedModeBanner: false,
-      home: HomeScreen(),
+      home: HomeScreen(coreectAnswer: 0),
     );
   }
 }

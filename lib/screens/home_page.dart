@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_quiz_application/screens/quiz_page.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+  const HomeScreen({super.key, required this.coreectAnswer});
+  final int coreectAnswer;
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +26,7 @@ class HomeScreen extends StatelessWidget {
               onPressed: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => QuizPage(),
+                    builder: (context) => QuizPage(correctAnswers: 0),
                   ),
                 );
               },
@@ -55,6 +56,7 @@ class HomeScreen extends StatelessWidget {
       centerTitle: true,
       elevation: 4,
       backgroundColor: Colors.indigo[800],
+      automaticallyImplyLeading: false,
     );
   }
 }
