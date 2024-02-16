@@ -27,29 +27,39 @@ class _QuizPageState extends State<QuizPage> {
           children: [
             Image(
               image: AssetImage("images/$imageIndex.png"),
+              height: 300,
+              width: 300,
             ),
-            Text(
-              getQuestions()[shownindex].title!,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 18.0,
+            SizedBox(height: 15.0),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15),
+              child: SizedBox(
+                width: MediaQuery.of(context).size.width,
+                child: Text(
+                  getQuestions()[shownindex].title!,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18.0,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
               ),
-              textAlign: TextAlign.center,
             ),
-            SizedBox(height: 10.0),
+            SizedBox(height: 20.0),
             ...List.generate(
               4,
               (index) => getlisttile(index),
             ),
+            SizedBox(height: 10.0),
             Visibility(
               visible: answerState,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  minimumSize: Size(200.0, 40.0),
+                  minimumSize: Size(200.0, 45.0),
                   backgroundColor: Colors.red[800],
                 ),
                 onPressed: () {
-                  Navigator.of(context).push(
+                  Navigator.of(context).pushReplacement(
                     MaterialPageRoute(
                       builder: (context) =>
                           ResultPage(correctanswer: correctAnswers),
@@ -60,6 +70,7 @@ class _QuizPageState extends State<QuizPage> {
                   "مشاهده نتایج",
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
+                    color: Colors.white,
                   ),
                 ),
               ),
@@ -72,19 +83,24 @@ class _QuizPageState extends State<QuizPage> {
 
   PreferredSizeWidget getappbar() {
     return AppBar(
-      title: Text("سوال ${itemCounter + 1} از 10"),
+      title: Text(
+        "سوال ${itemCounter + 1} از 10",
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
+          color: Colors.white,
+        ),
+      ),
       centerTitle: true,
       elevation: 4,
       backgroundColor: Colors.indigo[800],
+      iconTheme: IconThemeData(
+        color: Colors.white,
+      ),
     );
   }
 
   Widget getlisttile(index) {
-    return ListTile(
-      title: Text(
-        getQuestions()[shownindex].answers![index],
-        textAlign: TextAlign.end,
-      ),
+    return GestureDetector(
       onTap: () {
         itemCounter++;
         setState(() {
@@ -100,6 +116,28 @@ class _QuizPageState extends State<QuizPage> {
           }
         });
       },
+      child: Padding(
+        padding: const EdgeInsets.only(right: 15, left: 15, bottom: 15),
+        child: Container(
+          height: 45,
+          width: MediaQuery.of(context).size.width,
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: Colors.black,
+              width: 2,
+            ),
+            borderRadius: BorderRadius.all(
+              Radius.circular(15),
+            ),
+          ),
+          child: Center(
+            child: Text(
+              getQuestions()[shownindex].answers![index],
+              textAlign: TextAlign.end,
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

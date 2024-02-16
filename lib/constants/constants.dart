@@ -1,4 +1,4 @@
-import 'package:flutter_quiz_application/data/questio0n.dart';
+import 'package:flutter_quiz_application/data/question.dart';
 
 List<Question> getQuestions() {
   var firstquestion = Question();

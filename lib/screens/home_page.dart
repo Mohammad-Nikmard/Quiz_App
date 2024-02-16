@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_quiz_application/screens/quiz_page.dart';
 
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +19,7 @@ class HomePage extends StatelessWidget {
             SizedBox(height: 30.0),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                minimumSize: Size(200.0, 40.0),
+                minimumSize: Size(200.0, 45.0),
                 backgroundColor: Colors.indigo[800],
               ),
               onPressed: () {
@@ -33,6 +33,7 @@ class HomePage extends StatelessWidget {
                 "شروع بازی",
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
+                  color: Colors.white,
                 ),
               ),
             ),
@@ -44,7 +45,13 @@ class HomePage extends StatelessWidget {
 
   PreferredSizeWidget getappbar() {
     return AppBar(
-      title: Text("کوییز کینگ"),
+      title: Text(
+        "کوییز گیم",
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
+          color: Colors.white,
+        ),
+      ),
       centerTitle: true,
       elevation: 4,
       backgroundColor: Colors.indigo[800],
